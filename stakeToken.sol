@@ -5,8 +5,9 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 //import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 contract stakingContract is ERC20{
     using SafeMath for uint256;
+    //address[] internal stakeHolders;
     mapping(address=>uint256) internal stake;
-    mapping(address=>uint256) internal stakeHolders;
+    mapping(address=>address) internal stakeHolders;
     uint256 cntr=0;
     constructor(uint256 _totalSupply) ERC20("stake","STKN")
    {
@@ -24,7 +25,7 @@ contract stakingContract is ERC20{
         
         function isStakeHolder(address _stakeHolderAddr) public view returns(bool){
             
-                if(stakeHolders[_stakeHolderAddr]==0){
+                if(stakeHolders[_stakeHolderAddr]==_stakeHolderAddr){
                      return (true);
                 }
             
@@ -34,8 +35,7 @@ contract stakingContract is ERC20{
        function addStakeHolder(address _stakeHolderAddr) public{
            (bool holdsStackHolder)=isStakeHolder(_stakeHolderAddr);
            if( !holdsStackHolder){
-               stakeHolders[_stakeHolderAddr]=cntr;
-               cntr+=1;
+               stakeHolders[_stakeHolderAddr]=_stakeHolderAddr;
            }
         }
         
