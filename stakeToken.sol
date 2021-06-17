@@ -5,14 +5,14 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 //import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 contract stakingContract is ERC20{
     using SafeMath for uint256;
-    address[] internal stakeHolders;
     mapping(address=>uint256) internal stake;
-    
+    mapping(address=>uint256) internal stakeHolders;
+    uint256 cntr=0;
     constructor(uint256 _totalSupply) ERC20("stake","STKN")
    {
        _mint(msg.sender, _totalSupply);
    }
-  //function transfer()
+  
         
          //For staking tokens.
         function stakeToken(uint256 _stakeAmt) public{
@@ -21,27 +21,28 @@ contract stakingContract is ERC20{
             stake[msg.sender]=stake[msg.sender].add(_stakeAmt);
         }
    
-        function isStakeHolder(address _stakeHolderAddr) public view returns(bool,uint256){
-            for(uint256 i=0;i<stakeHolders.length;i+=1){
-                if( _stakeHolderAddr==stakeHolders[i]){
-                    return (true,i); // this means _stakeHolderAddr is stored at ith index.
+        
+        function isStakeHolder(address _stakeHolderAddr) public view returns(bool){
+            
+                if(stakeHolders[_stakeHolderAddr]==0){
+                     return (true);
                 }
-            }
-            return (false,0);
+            
+            return (false);
         }
        
        function addStakeHolder(address _stakeHolderAddr) public{
-           (bool holdsStackHolder,)=isStakeHolder(_stakeHolderAddr);
+           (bool holdsStackHolder)=isStakeHolder(_stakeHolderAddr);
            if( !holdsStackHolder){
-               stakeHolders.push(_stakeHolderAddr);
+               stakeHolders[_stakeHolderAddr]=cntr;
+               cntr+=1;
            }
         }
         
-        function removeStackeHolder(address _stakeHolderAddr) public{ 
-            (bool holdsStackHolder,uint256 idx)=isStakeHolder(_stakeHolderAddr);
+        function removeStakeHolder(address _stakeHolderAddr) internal{ 
+            (bool holdsStackHolder)=isStakeHolder(_stakeHolderAddr);// Need to implement
             if(holdsStackHolder){
-                stakeHolders[idx] = stakeHolders[stakeHolders.length - 1];
-                stakeHolders.pop();
+                delete stakeHolders[_stakeHolderAddr];
             }
         }
         
@@ -52,16 +53,18 @@ contract stakingContract is ERC20{
        }
    
         
-        function removeStake(uint256 _stakeAmt) public{
+        function removeStake(uint256 _stakeAmt) internal{
             stake[msg.sender]=stake[msg.sender].sub(_stakeAmt);//subtract amount of stake.
-            if(stake[msg.sender]==0) removeStackeHolder(msg.sender);//if stake amount dont exists then remove from mapping.
+            if(stake[msg.sender]==0) removeStakeHolder(msg.sender);//if stake amount dont exists then remove from mapping.
             _mint(msg.sender,_stakeAmt);
         }
         
         
         function withdraw() public{
         require(stake[msg.sender]!=0,"You haven't staked anything.");
-        uint256 reward = (stake[msg.sender].mul(2)).div(100);// 2%
-        _mint(msg.sender, reward+stake[msg.sender]);
+        uint256 userStake=stake[msg.sender];
+        uint256 reward = (userStake.mul(2)).div(100);// 2%
+        removeStake(userStake);
+        _mint(msg.sender, reward+userStake);
         }
 }
