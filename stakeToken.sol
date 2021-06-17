@@ -8,6 +8,8 @@ contract stakingContract is ERC20{
     //address[] internal stakeHolders;
     mapping(address=>uint256) internal stake;
     mapping(address=>address) internal stakeHolders;
+    mapping(address=>uint256) internal timestampMap;
+    
     uint256 cntr=0;
     constructor(uint256 _totalSupply) ERC20("stake","STKN")
    {
@@ -20,6 +22,8 @@ contract stakingContract is ERC20{
             _burn(msg.sender,_stakeAmt);
             if(stake[msg.sender]==0){ addStakeHolder(msg.sender);}
             stake[msg.sender]=stake[msg.sender].add(_stakeAmt);
+            //Adding timestamp.
+            timestampMap[msg.sender]=block.timestamp;
         }
    
         
@@ -63,8 +67,16 @@ contract stakingContract is ERC20{
         function withdraw() public{
         require(stake[msg.sender]!=0,"You haven't staked anything.");
         uint256 userStake=stake[msg.sender];
-        uint256 reward = (userStake.mul(2)).div(100);// 2%
+        uint256 reward;
+        if ((block.timestamp-timestampMap[msg.sender]) > 30){
+             reward = (userStake.mul(2)).div(100);// 2%
+        }else{
+            reward=0;
+        }
+        
         removeStake(userStake);
         _mint(msg.sender, reward+userStake);
         }
+        
+        
 }
