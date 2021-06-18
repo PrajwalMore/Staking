@@ -19,7 +19,7 @@ contract stakingContract is ERC20{
         
          //For staking tokens.
         function stakeToken(uint256 _stakeAmt) public{
-            _burn(msg.sender,_stakeAmt);
+            transfer(address(this),_stakeAmt);
             if(stake[msg.sender]==0){ addStakeHolder(msg.sender);}
             stake[msg.sender]=stake[msg.sender].add(_stakeAmt);
             //Adding timestamp.
@@ -63,21 +63,23 @@ contract stakingContract is ERC20{
             _mint(msg.sender,_stakeAmt);
         }
         
+        event evt(uint256 reward);
         
         function withdraw() public{
         require(stake[msg.sender]!=0,"You haven't staked anything.");
         uint256 userStake=stake[msg.sender];
         uint256 reward;
         uint tt=block.timestamp-timestampMap[msg.sender];
-        if ( tt > 30 minutes){
-            uint256 interest=(tt/30 minutes)*2;
+        if ( tt > 5 minutes){
+            uint256 interest=(tt/5 minutes)*2;
              reward = (userStake.mul(interest)).div(100);
         }else{
             reward=0;
         }
         
         removeStake(userStake);
-        _mint(msg.sender, reward+userStake);
+        transfer(msg.sender,reward+userStake);
+        emit evt(reward);
         }
         
          
