@@ -60,7 +60,6 @@ contract stakingContract is ERC20{
         function removeStake(uint256 _stakeAmt) internal{
             stake[msg.sender]=stake[msg.sender].sub(_stakeAmt);//subtract amount of stake.
             if(stake[msg.sender]==0) removeStakeHolder(msg.sender);//if stake amount dont exists then remove from mapping.
-            _mint(msg.sender,_stakeAmt);
         }
         
         event evt(uint256 reward);
