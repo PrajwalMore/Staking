@@ -2,6 +2,9 @@ const stakeTokens = artifacts.require("./stakeTokens.sol");
 //const getWeb3= artifacts.require("./D:/My-Projects/token_staking/client/src/getWeb3");
 //const BN = web3.utils.BN;
 const chai = require("./setupchai.js");
+let catchRevert = require("./exceptions.js").catchRevert;
+const truffleAssert = require('truffle-assertions');
+
 const expect = chai.expect;
 const {
     balance,
@@ -51,22 +54,22 @@ contract("stakeTokens", accounts => {
 
         return expect(stakerBalanceBefore.toString()).to.equal(stakerBalanceAfter.toString());//assuming that staker is withdrawing before 5 minutes in this case.
     });
-    it("After withdrawing reward interest gets added to accounts.", async () => {
-        let stakeAmount = "10000000000000000000";
-        await instance.transfer(staker, "100000000000000000000", { from: deployerAccount });
-        let stakerBalanceBefore = await instance.balanceOf(staker);
-        await instance.stakeToken(stakeAmount, { from: staker });
-        //console.log( +stakerBalanceBefore + 200000000000000000);
-        console.log('wait for 5 minutes for earning reward');
-        await sleep(400000);//5 minutes
-        //await sleep(30000); //30 seconds
+    // it("After withdrawing reward interest gets added to accounts.", async () => {
+    //     let stakeAmount = "10000000000000000000";
+    //     await instance.transfer(staker, "100000000000000000000", { from: deployerAccount });
+    //     let stakerBalanceBefore = await instance.balanceOf(staker);
+    //     await instance.stakeToken(stakeAmount, { from: staker });
+    //     //console.log( +stakerBalanceBefore + 200000000000000000);
+    //     console.log('wait for 5 minutes for earning reward');
+    //     await sleep(400000);//5 minutes
+    //     //await sleep(30000); //30 seconds
 
-        instance.withdraw({ from: staker });
-        let stakerBalanceAfter = await instance.balanceOf(staker);
-        //console.log("stake balance:",stakerBalanceAfter);
-        let interest=200000000000000000;
-        return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
-    }).timeout(500000);
+    //     instance.withdraw({ from: staker });
+    //     let stakerBalanceAfter = await instance.balanceOf(staker);
+    //     //console.log("stake balance:",stakerBalanceAfter);
+    //     let interest=200000000000000000;
+    //     return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
+    // }).timeout(500000); // uncomment while testing...
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -88,14 +91,17 @@ contract("stakeTokens", accounts => {
 
     });
 
-    // it("should revert if user tries to call timeAfterStaked() without staking", async () => {
-    //     //console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",timeAfterStaked({from:userThird}));
-    //     //await expectRevert(instance.timeAfterStaked({ from: userThird }), 'You have to stake first!!!');
-    //     assert(instance.timeAfterStaked({ from: userThird }), 'You have to stake first!!!');
-    // });
+    it("should revert if user tries to call timeAfterStaked() without staking", async () => {
+        //console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",timeAfterStaked({from:userThird}));
+        //await expectRevert(instance.timeAfterStaked({ from: userThird }), 'You have to stake first!!!');
+           await truffleAssert.reverts(instance.timeAfterStaked({ from: userThird }));
+        
+    });
 
-    // it("It's not possible withdraw if caller haven't staked.", async () => {
-    //     await expectRevert(instance.withdraw({ from: userThird }), 'You haven\'t staked anything.');
-    // });
+    it("It's not possible withdraw if caller haven't staked.", async () => {
+      
+            await truffleAssert.reverts(instance.withdraw({ from: userThird }));
+        
+    });
 
 });
