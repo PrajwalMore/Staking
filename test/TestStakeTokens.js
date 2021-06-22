@@ -56,15 +56,17 @@ contract("stakeTokens", accounts => {
         await instance.transfer(staker, "100000000000000000000", { from: deployerAccount });
         let stakerBalanceBefore = await instance.balanceOf(staker);
         await instance.stakeToken(stakeAmount, { from: staker });
+        //console.log( +stakerBalanceBefore + 200000000000000000);
         console.log('wait for 5 minutes for earning reward');
-        await sleep(300000);//5 minutes
+        await sleep(400000);//5 minutes
         //await sleep(30000); //30 seconds
 
         instance.withdraw({ from: staker });
         let stakerBalanceAfter = await instance.balanceOf(staker);
+        //console.log("stake balance:",stakerBalanceAfter);
         let interest=200000000000000000;
         return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
-    }).timeout(400000);
+    }).timeout(500000);
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
