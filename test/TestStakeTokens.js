@@ -79,7 +79,6 @@ contract("stakeTokens", accounts => {
         await instance.stakeToken(stakeAmount, { from: staker });
         await instance.withdraw({ from: staker });
         let stakeOfstaker = await instance.stakeOf(staker);
-        console.log("/////////////////////////////////////////////", stakeOfstaker.toString());
         return expect(stakeOfstaker.toString()).to.equal("0");
     });
 
@@ -87,8 +86,8 @@ contract("stakeTokens", accounts => {
         let stakeAmount = "10000000000000000000";
         await instance.transfer(staker, "100000000000000000000", { from: deployerAccount });
         await instance.stakeToken(stakeAmount, { from: staker });
-        return expect(instance.timeAfterStaked()).to.not.equal(null);
-
+        return expect(await instance.timeAfterStaked({ from: staker })).to.not.equal(0);
+        
     });
 
     it("should revert if user tries to call timeAfterStaked() without staking", async () => {
