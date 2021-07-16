@@ -91,8 +91,6 @@ contract("stakeTokens", accounts => {
     });
 
     it("should revert if user tries to call timeAfterStaked() without staking", async () => {
-        //console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",timeAfterStaked({from:userThird}));
-        //await expectRevert(instance.timeAfterStaked({ from: userThird }), 'You have to stake first!!!');
            await truffleAssert.reverts(instance.timeAfterStaked({ from: userThird }));
         
     });
