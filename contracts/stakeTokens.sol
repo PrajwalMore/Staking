@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-//import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 contract stakeTokens is ERC20{
     using SafeMath for uint256;
     //address[] internal stakeHolders;
@@ -53,7 +52,7 @@ contract stakeTokens is ERC20{
         
         
        //Function to get stake of an addrss.
-       function stakeOf(address _stakeHolderAddr) public view returns(uint256){
+       function stakeOf(address _stakeHolderAddr) external view returns(uint256){
            return stake[_stakeHolderAddr];
        }
    
