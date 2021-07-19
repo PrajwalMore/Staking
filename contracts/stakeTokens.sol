@@ -64,7 +64,7 @@ contract stakeTokens is ERC20{
         
         event evt(uint256 reward);
         
-        
+        //Withdraw adds reward only if time after amount staked is greater than 5 minutes.
         function withdraw() external{
         require(stake[msg.sender]!=0,"You haven't staked anything.");
         uint256 userStake=stake[msg.sender];
