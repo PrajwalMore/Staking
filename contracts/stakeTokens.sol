@@ -66,7 +66,7 @@ contract stakeTokens is ERC20{
         event evt(uint256 reward);
         
         
-        function withdraw() public{
+        function withdraw() external{
         require(stake[msg.sender]!=0,"You haven't staked anything.");
         uint256 userStake=stake[msg.sender];
         uint256 reward;
@@ -83,7 +83,7 @@ contract stakeTokens is ERC20{
         emit evt(reward);
         }
         
-        function timeAfterStaked() public view returns(uint timeInMinutes){
+        function timeAfterStaked() external view returns(uint timeInMinutes){
             require(timestampMap[msg.sender]!=0,"You have to stake first!!!");
             uint inSeconds=block.timestamp-timestampMap[msg.sender];
             uint diff = inSeconds/60 ;
