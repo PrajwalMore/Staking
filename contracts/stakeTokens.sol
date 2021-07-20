@@ -18,7 +18,6 @@ contract stakeTokens is ERC20{
         
          //For staking tokens.
         function stakeToken(uint256 _stakeAmt) public{
-            //_burn(msg.sender,_stakeAmt);
             transfer(address(this),_stakeAmt);
             if(stake[msg.sender]==0){ addStakeHolder(msg.sender);}
             stake[msg.sender]=stake[msg.sender].add(_stakeAmt);
