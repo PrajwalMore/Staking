@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract stakeTokens is ERC20{
     using SafeMath for uint256;
-    //address[] internal stakeHolders;
     mapping(address=>uint256) internal stake;
     mapping(address=>address) internal stakeHolders;
     mapping(address=>uint256) public timestampMap;
