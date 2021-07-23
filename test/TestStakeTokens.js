@@ -1,5 +1,5 @@
 const stakeTokens = artifacts.require("./stakeTokens.sol");
-//const getWeb3= artifacts.require("./D:/My-Projects/token_staking/client/src/getWeb3");
+
 //const BN = web3.utils.BN;
 const chai = require("./setupchai.js");
 let catchRevert = require("./exceptions.js").catchRevert;
