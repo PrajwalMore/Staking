@@ -45,22 +45,22 @@ contract("stakeTokens", accounts => {
 
         return expect(stakerBalanceBefore.toString()).to.equal(stakerBalanceAfter.toString());//assuming that staker is withdrawing before 5 minutes in this case.
     });
-    // it("After withdrawing reward interest gets added to accounts.", async () => {
-    //     let stakeAmount = web3.utils.toWei("10","ether");
-    //     await instance.transfer(staker, web3.utils.toWei("100","ether"), { from: deployerAccount });
-    //     let stakerBalanceBefore = await instance.balanceOf(staker);
-    //     await instance.stakeToken(stakeAmount, { from: staker });
-    //     //console.log( +stakerBalanceBefore + 200000000000000000);
-    //     console.log('wait for 5 minutes for earning reward');
-    //     await sleep(400000);//5 minutes
-    //     //await sleep(30000); //30 seconds
+    it("After withdrawing reward interest gets added to accounts.", async () => {
+        let stakeAmount = web3.utils.toWei("10","ether");
+        await instance.transfer(staker, web3.utils.toWei("100","ether"), { from: deployerAccount });
+        let stakerBalanceBefore = await instance.balanceOf(staker);
+        await instance.stakeToken(stakeAmount, { from: staker });
+        //console.log( +stakerBalanceBefore + 200000000000000000);
+        console.log('wait for 5 minutes for earning reward');
+        await sleep(400000);//5 minutes
+        
 
-    //     instance.withdraw({ from: staker });
-    //     let stakerBalanceAfter = await instance.balanceOf(staker);
-    //     //console.log("stake balance:",stakerBalanceAfter);
-    //     let interest=200000000000000000;
-    //     return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
-    // }).timeout(500000); // uncomment while testing...
+        instance.withdraw({ from: staker });
+        let stakerBalanceAfter = await instance.balanceOf(staker);
+        //console.log("stake balance:",stakerBalanceAfter);
+        let interest=200000000000000000;
+        return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
+    }).timeout(500000); 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
