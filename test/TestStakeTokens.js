@@ -57,7 +57,6 @@ contract("stakeTokens", accounts => {
 
         instance.withdraw({ from: staker });
         let stakerBalanceAfter = await instance.balanceOf(staker);
-        //console.log("stake balance:",stakerBalanceAfter);
         let interest=200000000000000000;
         return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
     }).timeout(500000); 
