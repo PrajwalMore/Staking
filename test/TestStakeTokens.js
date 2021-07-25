@@ -1,6 +1,7 @@
 const stakeTokens = artifacts.require("./stakeTokens.sol");
 
 const chai = require("./setupchai.js");
+const { time } = require("@openzeppelin/test-helpers");
 let catchRevert = require("./exceptions.js").catchRevert;
 const truffleAssert = require('truffle-assertions');
 
