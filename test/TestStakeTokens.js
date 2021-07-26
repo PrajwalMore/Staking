@@ -46,24 +46,22 @@ contract("stakeTokens", accounts => {
 
         return expect(stakerBalanceBefore.toString()).to.equal(stakerBalanceAfter.toString());//assuming that staker is withdrawing before 5 minutes in this case.
     });
-    it("After withdrawing reward interest gets added to accounts.", async () => {
+    it("After withdrawing reward/interest gets added to accounts.", async () => {
         let stakeAmount = web3.utils.toWei("10","ether");
         await instance.transfer(staker, web3.utils.toWei("100","ether"), { from: deployerAccount });
         let stakerBalanceBefore = await instance.balanceOf(staker);
         await instance.stakeToken(stakeAmount, { from: staker });
-        //console.log( +stakerBalanceBefore + 200000000000000000);
-        console.log('wait for 5 minutes for earning reward');
-        await sleep(400000);//5 minutes
-        
+
+        let ts=await instance.timestampMap(staker);
+        console.log(ts);
+        await time.increaseTo(ts+ (time.duration.minutes(5)));
 
         instance.withdraw({ from: staker });
         let stakerBalanceAfter = await instance.balanceOf(staker);
         let interest=200000000000000000;
-        return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());//assuming that staker is withdrawing after 5 minutes in this case.
-    }).timeout(500000); 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+        return expect(stakerBalanceAfter.toString()).to.equal(( +stakerBalanceBefore + +interest).toString());
+    });
+    
     it("User can withdraw reward and after withdrawing reward staker's reward becomes 0", async () => {
         let stakeAmount = web3.utils.toWei("10", "ether");
         await instance.transfer(staker, web3.utils.toWei("100", "ether"), { from: deployerAccount });
